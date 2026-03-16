@@ -14,6 +14,11 @@ A proven methodology for transforming any topic into a publication-ready tactica
 
 Covers the full 5-wave pipeline: Foundation, Research, Synthesis, Writing, Assembly.
 
+### [Analyze Repo](skills/analyze-repo.md)
+A structured skill for evaluating external repositories, protocols, or tools against your own system's architecture. Produces integration briefs that surface overlaps, borrowable ideas ranked by impact, and what to avoid.
+
+Use it to build a research library during roadmap planning.
+
 ## How to Use These Skills
 
 These are markdown files designed to be injected into AI agent context. You can:
