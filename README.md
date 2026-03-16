@@ -2,6 +2,12 @@
 
 Open frameworks and skills from [The Cognitive Shift](https://thecognitiveshift.com).
 
+## Transcriptions
+
+The `transcriptions/` directory is **auto-populated by the Discord Voice Bot** running in [`cognitive-shift-ops`](https://github.com/RhysEJF/cognitive-shift-ops). Do not delete this directory.
+
+Files are named `YYYY-MM-DD_channel-name.md` and contain per-speaker transcripts with YAML frontmatter. New sessions on the same date/channel are appended to existing files.
+
 ## Skills
 
 ### [SWARMS Assessment](skills/swarms-assessment.md)
