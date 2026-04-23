@@ -7,7 +7,7 @@ source_anchor: "Ch1: Lobsters, pp8-10, pp15-16"
 source_quote: "Manfred is at the peak of his profession, which is essentially coming up with whacky but workable ideas and giving them to people who will make fortunes with them. He does this for free, gratis. In return, he has virtual immunity from the tyranny of cash; money is a symptom of poverty, after all, and Manfred never has to pay for anything."
 difficulty: intermediate
 decision_types: [pricing, strategy, distribution, business-model, reputation]
-chains_well_with: [substrate-independence-of-cognition, first-case-precedent-lock-in, reputation-as-currency]
+chains_well_with: [substrate-independence-of-cognition, first-case-precedent-lock-in, abundance-graduation]
 opposite_of: scarcity-pricing
 ---
 

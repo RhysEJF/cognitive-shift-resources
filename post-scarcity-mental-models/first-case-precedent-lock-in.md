@@ -7,7 +7,7 @@ source_anchor: "Ch1: Lobsters, pp22-23"
 source_quote: "It's not so much that they should be treated as human-equivalent, as that, if they aren't treated as people, it's quite possible that other uploaded beings won't be treated as people either. You're setting a legal precedent, Bob. I know of six other companies doing uploading work right now, and not one of 'em's thinking about the legal status of the uploaded. If you don't start thinking about it now, where are you going to be in three to five years' time?"
 difficulty: intermediate
 decision_types: [strategy, policy, ethics, product, legal, standards]
-chains_well_with: [substrate-independence-of-cognition, agalmic-economy, regulatory-arbitrage-window]
+chains_well_with: [substrate-independence-of-cognition, agalmic-economy, jurisdictional-arbitrage-via-structure-layering]
 opposite_of: wait-and-see
 ---
 

@@ -7,7 +7,7 @@ source_anchor: "Ch2: Troubadour, pp30, pp40, pp49-50"
 source_quote: "agalmic.holdings.root.184.97.A-for-able.B-for-baker.5… The president of agalmic.holdings.root.184.97.AB5 is agalmic.holdings.root.184.97.201. The secretary is agalmic.holdings.root.184.D5, and the chair is agalmic.holdings.root.184.E8.FF. All the shares are owned by those companies in equal measure, and I can tell you that their regulations are written in Python."
 difficulty: advanced
 decision_types: [strategy, legal, compliance, policy, investment, risk]
-chains_well_with: [agalmic-economy, first-case-precedent-lock-in, deep-structures-persist-across-frame-shifts]
+chains_well_with: [agalmic-economy, first-case-precedent-lock-in, legacy-drives-outlast-frame-shifts]
 opposite_of: human-discretion
 ---
 

@@ -4,7 +4,7 @@ slug: abundance-graduation
 category: post-scarcity
 source: "Charles Stross, Accelerando (2005) — Ch2: Troubadour, Gianni Vittoria's library conversation. Echoes of Robert Reich on public goods, Paul Mason's Postcapitalism (2015), and Buckminster Fuller's 'ephemeralization'."
 source_anchor: "Ch2: Troubadour, pp45-46"
-source_quote: "You want to abolish scarcity, not just money! … Don't plan the economy; take things out of the economy. Do you pay for the air you breathe? Should uploaded minds — who will be the backbone of our economy, by and by — have to pay for processor cycles? No and no."
+source_quote: "Manfred, p46: 'You want to abolish scarcity, not just money!' / Gianni's reply, p46 (continuing directly): 'Indeed. There's more to that than mere economic performance; you have to consider abundance as a factor. Don't plan the economy; take things out of the economy. Do you pay for the air you breathe? Should uploaded minds — who will be the backbone of our economy, by and by — have to pay for processor cycles? No and no.'"
 difficulty: intermediate
 decision_types: [strategy, pricing, investment, policy, product]
 chains_well_with: [agalmic-economy, substrate-independence-of-cognition, turing-complete-regulatory-automation]
