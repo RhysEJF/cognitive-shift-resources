@@ -6,7 +6,8 @@ Mental models extracted from Charles Stross's *Accelerando* using the `extract-m
 
 1. Copy all `.md` files to your `memory/frameworks/post-scarcity/` directory
 2. Copy the `chains/` directory to `memory/frameworks/post-scarcity/chains/`
-3. Install the extraction skill from `../skills/extract-mental-models/` to your `skills/` directory
+3. Copy `../commands/post-scarcity.md` to your `.claude/commands/` directory
+4. Install the extraction skill from `../skills/extract-mental-models/` to your `skills/` directory
 
 ## Usage
 
