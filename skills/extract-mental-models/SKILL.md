@@ -1,205 +1,139 @@
 ---
 name: extract-mental-models
-description: Extract genuine mental models (reasoning patterns, not ideas) from a text — book chapter, essay, research paper, transcript — into the standard Mental Models OS file format, with synthesis rules to merge overlapping models and decompose overloaded ones across multiple extraction passes
+description: Extract reasoning patterns from dense texts into standardized, operational mental model files. Use when the user wants to systematically analyze books, articles, or documents to identify reusable thinking frameworks and decision-making patterns. Perfect for building personal thinking toolkits from expert content. ALWAYS use this skill when users mention extracting insights from books, building thinking toolkits, analyzing frameworks from experts, or want to systematize knowledge from dense texts into actionable tools.
 ---
 
-# Extract Mental Models from a Text
+# Extract Mental Models
 
-> Turn a text into a sharp set of reasoning patterns — not a summary, not an idea list — in the same format as the canonical Mental Models OS library, so they can feed a `/think`-style chain command.
+This skill systematizes the extraction of **reasoning patterns** (not summaries or idea lists) from dense texts into standardized, operational mental model files. Each model becomes a reusable decision-making tool that works across multiple contexts and situations.
 
-## When to Use
+## What Makes a High-Quality Mental Model
 
-- A book (or long text) is dense with reasoning patterns that would shape future decisions, not just provide information
-- You want a *reusable thinking toolkit* out of a source, not a bookmark collection
-- You intend to build (or already have) a `/think`-style command that chains the extracted models on user-supplied situations
+High-quality mental models are **operational tools, not theoretical concepts**. They should be:
 
-**Skip this skill if**:
-- You want an idea list, product catalogue, or highlight reel — use a simpler extraction pipeline (see `experiences/solutions/parallel-book-idea-extraction-to-csv.md`)
-- The text is only one chapter or essay — the synthesis step needs multiple passes to earn its keep
+- **Decision-focused**: Help you make better decisions in real situations
+- **Immediately actionable**: Include step-by-step guidance for application  
+- **Accessible**: Clear one-liner summaries that capture the essence instantly
+- **Grounded in examples**: Real-world scenarios showing the model in action
+- **Chainable**: Connect logically with other thinking patterns
 
-## What Counts As a Mental Model
+Think "infrastructure you run" not "content you read." Each model should change how you approach future decisions, not just add to your knowledge.
 
-A mental model is a **reasoning pattern** — not a fact, not a product, not an anecdote. It qualifies if it meets all four tests:
+## Core Definition
 
-1. **Portable**: applies across multiple specific instances in the text (or plausibly across many more beyond it). If it only describes one character, product, or scenario, it's an idea, not a model.
-2. **Has a mechanism**: you can state it as "when X condition holds, Y tends to happen, because Z". Models without mechanisms are just observations.
-3. **Changes how you think, not just what you know**: after learning it, future decisions get reframed. If it's just a new fact, it's not a model.
-4. **Has a clear trigger and anti-pattern**: you can name "use when..." and "don't use when...". Without these, the model is too fuzzy to operationalize.
+A mental model qualifies when it satisfies four criteria:
+- **Portable**: applies across multiple instances beyond a single scenario
+- **Mechanistic**: explainable as "when X, then Y happens, because Z"
+- **Reframes thinking**: alters future decisions, not just adds facts
+- **Operationalizable**: has clear usage triggers and anti-patterns
 
-**Test case — "uplifted lobsters in Accelerando"**:
-- One specific product → **fails Test 1** (portability)
-- The underlying pattern — *cognition is portable across substrates (biological → silicon → uplifted animal → fictional)* — passes all 4 tests. That's the model. Call it **Substrate Independence of Cognition**.
+## Four-Step Extraction Process
 
-## Extraction Methodology
+### 1. Read for patterns
+Identify reasoning rules the author demonstrates; capture candidates with working titles and anchor passages
 
-### Step 1: Read the Chunk for Reasoning Patterns
+### 2. Filter rigorously
+Test each candidate against the four criteria; target 1-3 survivors per chunk
 
-Read the assigned text chunk in full. As you read, track candidates that might be mental models. For each candidate, mentally answer:
+### 3. Write standardized files
+Use YAML frontmatter plus structured sections (What It Is, When to Use It, Walkthrough, Example, Chains Well With, Go Deeper)
 
-- What *reasoning pattern* is the author illustrating through this passage?
-- Is the author demonstrating a rule about how a certain type of situation tends to play out?
-- Could I state the pattern in one sentence without mentioning the specific characters/products?
+### 4. Add metadata
+Include source anchors, page ranges, and verbatim quotes for traceability
 
-If yes to all three, it's a candidate. Capture it in a short note:
-- **Candidate name** (working title, kebab-case slug)
-- **One-sentence pattern** (the reasoning rule)
-- **Anchor passage** (page + 1-2 sentences of source)
+## Synthesis Rules Between Passes
 
-Aim for 3-5 candidates per chunk. You'll filter down.
+Four outcomes for new models:
+- **Keep standalone** (genuinely distinct)
+- **Merge** (restatement of existing model)
+- **Decompose** (existing model conflated two patterns)
+- **Supersede** (new model is sharper)
 
-### Step 2: Filter Against the 4 Tests
+Target: ~10-20 final models per source, not exhaustive catalogs.
 
-For each candidate, run the 4 tests above. If it fails any one, either:
-- Demote it (it's an idea, not a model — log in an `ideas-only.md` file or just drop)
-- Rewrite it (often a failing candidate points to a *better* model one level up — the specific instance becomes evidence, the abstraction becomes the model)
+## Quality Standards
 
-Target yield: **1-3 surviving models per chunk**. More than 3 usually means you're extracting ideas, not models.
+Each extracted mental model must meet these standards:
 
-### Step 3: Write the Model File
+### Content Quality
+- **Concrete examples**: Use specific scenarios with real details, not hypotheticals
+- **Clear triggers**: Specify exactly when to use (and when NOT to use) the model
+- **Actionable walkthroughs**: Step-by-step processes that someone can follow immediately
+- **Mechanistic explanations**: Explain WHY the model works, not just what it does
 
-Each surviving model gets its own file. Use this exact format (matches the canonical Mental Models OS library at `skills/mental-models-os/models/[category]/[slug].md`):
+### Format Consistency  
+- **Complete YAML frontmatter**: All required fields filled with accurate information
+- **Structured sections**: Follow the exact section order and naming
+- **Operational tone**: Write as tools for doing, not concepts for understanding
+- **Self-contained**: Never reference external frameworks or libraries the reader might not know
 
-```markdown
+### Practical Tests
+Before finalizing any model, ask:
+- **Can someone apply this to a real decision tomorrow?**
+- **Does the example show specific actions, not just outcomes?**
+- **Would this model change how I approach similar problems?**
+- **Is it genuinely portable across different contexts?**
+
+If any answer is "no," refine the model until all tests pass.
+
+## Output Format
+
+Each mental model should be saved as a separate .md file in `memory/frameworks/[source-slug]/` with this exact structure:
+
+```yaml
 ---
-name: [Human-readable name — Title Case]
-slug: [kebab-case-slug]
-category: [economics | systems | general-thinking | psychology | network-effects | business-strategy | post-scarcity | other — pick the best fit]
-source: "[Original author / work, with year — cite the text you extracted it from]"
-source_anchor: "[Chapter label, page range — e.g., Ch1: Lobsters, p11-13]"
-source_quote: "[Verbatim 1-2 sentence quote from the text anchoring the model]"
-difficulty: [beginner | intermediate | advanced]
-decision_types: [array — strategy, pricing, product, investment, marketing, hiring, risk, operations, organizational, communication, innovation, policy]
-chains_well_with: [array of slugs — leave empty initially, fill during synthesis]
-opposite_of: [single concept slug — the mirror pattern]
+name: first-principles-thinking
+one_liner: "Break problems down to foundational truths, then reason up from there instead of borrowing someone else's conclusion"
+categories: [general-thinking, problem-solving]
+source: "Book/Article Title"
+source_anchor: "Page X, Chapter Y"
+difficulty: "intermediate"
+chains_with: [inversion, second-order-thinking]
 ---
 
-# [Name]
-
-> [One-sentence tagline. Crystalline. This is what a reader sees first.]
+# First Principles Thinking
 
 ## What It Is
-
-[2-4 paragraphs. Explain the pattern, its mechanism, and why it matters. Include the intellectual context when relevant — does it echo an existing named idea? Who has articulated it before? Aim for 200-400 words total.]
+Break a problem down to its foundational truths, then reason up from there instead of borrowing someone else's conclusion. Most thinking is analogical (copying existing solutions), but first principles thinking decomposes problems to bedrock facts, then rebuilds solutions from those truths alone.
 
 ## When to Use It
+Use this model when:
+- Entering markets with entrenched incumbents and you need asymmetric strategy
+- Facing cost structures that seem fixed but have never been questioned
+- Building something where "best practice" produces average results
+- Stuck because all obvious paths have been tried
 
-Use this model when you're:
-- [Trigger scenario 1]
-- [Trigger scenario 2]
-- [Trigger scenario 3]
-- [Trigger scenario 4]
+Don't use when you have a working solution and need speed - first principles is slow and expensive.
 
-**Don't use it when:** [One sentence on the anti-pattern — when this model mis-fires or over-applies.]
-
-## The Walkthrough
-
-### Step 1: [Action verb + object]
-[Operational paragraph — what you actually do]
-
-### Step 2: [Action verb + object]
-[Operational paragraph]
-
-### Step 3: [Action verb + object]
-[Operational paragraph]
-
-### Step 4: [Action verb + object]
-[Operational paragraph]
+## Walkthrough
+1. **State the problem clearly** - Write what you're solving in one sentence without jargon
+2. **List embedded assumptions** - What beliefs are you carrying about how this gets solved?
+3. **Interrogate conventions** - For each assumption, ask "why" 3-5 times until you hit facts or accidents
+4. **Build from constraints** - Using only verified facts, reason toward a solution
+5. **Synthesize** - Compare your new approach to existing ones; the delta is your insight
 
 ## Example
-
-**Decision:** [A concrete decision — can be from the source text, or invented to show the model outside its original context]
-
-**Applying [Model]:**
-- Step 1: [How the step plays out on this decision]
-- Step 2: [How the step plays out]
-- Step 3: [How the step plays out]
-- Step 4: [Conclusion or action]
+Pricing a B2B SaaS product: Instead of copying per-seat pricing (convention), decompose to facts: value comes from outcomes achieved, costs scale with usage not seats. Result: outcome-based pricing that aligns cost with value and eliminates resentment over dormant seats.
 
 ## Chains Well With
-
-- **[Related model 1]** (`/[slug]`): [One sentence on why they chain.]
-- **[Related model 2]** (`/[slug]`): [One sentence on why they chain.]
-- **[Related model 3]** (`/[slug]`): [One sentence on why they chain.]
-
-(Leave this section blank on first extraction — fill during synthesis.)
+- **Inversion**: Use inversion first to map failure modes, then first principles to build solutions that avoid them
+- **Second-order thinking**: After building your solution, stress-test long-term consequences
+- **Systems thinking**: First principles identifies components; systems thinking maps their interactions
 
 ## Go Deeper
-
-- [Source work + chapter/page anchor]
-- [Any directly related real-world work the model echoes — e.g., "Kurzweil, The Singularity Is Near (2005)" for substrate-independence claims]
-- [Optional: a real incident that validates the pattern]
+- Aristotle's "Posterior Analytics" (original source)
+- Elon Musk's battery cost reasoning example
+- Feynman on knowing vs. knowing names
 ```
 
-### Step 4: Add Extraction Metadata
+### Chaining Guidance
 
-Beyond the canonical frontmatter, post-scarcity (or book-derived) models get two extra frontmatter fields:
-- `source_anchor`: chapter + page range
-- `source_quote`: the verbatim passage that anchored the model
+For the "chains_with" field and "Chains Well With" section:
+- **Only reference models you've already extracted** or plan to extract from the same source
+- **Use descriptive names** that clearly indicate what the other model does
+- **Explain the logical connection**: How does using these models together create better outcomes?
+- **If no clear chains exist**, leave the chains_with field empty and focus on standalone value
 
-These exist so future readers can trace the model back to the text and judge whether the abstraction was fair.
-
-## Synthesis Rules (between extraction passes)
-
-After each chunk, before moving to the next, run a synthesis pass against the already-extracted set. Four possible outcomes per new model:
-
-### A. New — keep standalone
-
-The model is genuinely distinct. No overlap with existing ones. Keep as-is. Log in synthesis log: *"New, distinct from existing set."*
-
-### B. Merge — fold into existing
-
-The new model is a restatement or special case of an existing model. Action:
-- Add the new model's source quote + page anchor to the existing model's `source_quote` field (become a `source_anchors` array: multiple entries)
-- Add a bullet to the existing model's "When to Use It" capturing the new instance
-- Delete the new file
-- Log: *"Merged into [existing-slug]. Reason: [overlap nature]."*
-
-### C. Decompose — existing model was too broad
-
-The new model shares some ground with an existing one, but examination reveals the existing model was conflating two distinct patterns. Action:
-- Split the existing model into two narrower models
-- Write the two narrower models as fresh files; delete the old one
-- The new model from this chunk becomes one of the two (or neither, if it's distinct from both splits)
-- Log: *"Decomposed [old-slug] into [slug-A] + [slug-B]. New model from Ch[N] became [which]."*
-
-### D. Supersede — new model is sharper
-
-The new model captures what the existing one was reaching for, but better. Action:
-- Rename the new model's slug to take over the old name (if the old name was good)
-- Add the old model's source anchors to the new file
-- Delete the old file
-- Log: *"Superseded [old-slug] with [new-slug]. Reason: [what's sharper]."*
-
-### Default behaviour
-
-If in doubt, **merge** rather than keep parallel models. The target is a small, sharp set (~10-20 models after all passes), not a completeness catalogue. A reader using a `/think`-style command on your extracted models will not thank you for 40 near-duplicates.
-
-## Output Location Convention
-
-- **Book-derived post-scarcity models** (this project): `memory/frameworks/post-scarcity/[slug].md`
-- **Book-derived models from other texts**: `memory/frameworks/[text-slug]/[slug].md`
-- **Canonical Mental Models OS library** (timeless, broad): `skills/mental-models-os/models/[category]/[slug].md` — **do NOT write extracted models here unless you've validated the pattern outside the source text**
-
-Each book/source directory should also contain:
-- `INDEX.md` — discovery list of kept models with one-line descriptions
-- `SYNTHESIS-LOG.md` — append-only log of every merge/decompose/supersede decision across extraction passes
-
-## Quality Checks
-
-Before marking a chunk done:
-
-1. **All 4 tests passed** for each kept model — portable, mechanism, reframing, trigger+anti
-2. **No model describes just one character or product** — those are ideas, not models
-3. **Each model has an anti-pattern** — if you can't articulate when NOT to use it, the model is too fuzzy
-4. **Synthesis log updated** — explicit decision for each new model (New / Merge / Decompose / Supersede)
-5. **Source quote is verbatim** — no splicing, no paraphrase (see pattern: Sub-Agent Quote-Splicing Risk)
-
-## Integration with `/think`-style Commands
-
-Models extracted via this skill can be chained in a `/think`-style command. The chain command needs to:
-- Read models from the output directory (e.g., `memory/frameworks/post-scarcity/`)
-- Pick 3-5 relevant to a user-supplied situation
-- Run each model's walkthrough on that situation
-- Produce a Decision Brief in the same format as `/think`
-
-See `.claude/commands/think.md` for the reference implementation pattern.
+## Output Locations
+- Book-derived models: `memory/frameworks/[source-slug]/`
+- Include `INDEX.md` and `SYNTHESIS-LOG.md` with each extraction
