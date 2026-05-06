@@ -180,6 +180,6 @@ git commit -m "stage-7c: add qmd-search.sh wrapper for non-Claude-Code agents"
 
 ### 6. STOP
 
-> **Stage 7c complete.** Your custom agent can now reach QMD via the wrapper. Paste `prompts/stage-8-brand-the-upgrade.md` to continue.
+> **Stage 7c complete.** Your custom agent can now reach QMD via the wrapper. Paste `prompts/stage-8-memory-layer-note.md` to continue.
 
 Do NOT run further commands until the user pastes the next prompt.

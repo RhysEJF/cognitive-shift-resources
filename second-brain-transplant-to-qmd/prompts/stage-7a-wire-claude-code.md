@@ -120,6 +120,6 @@ git commit -m "stage-7a: wire Claude Code commands to QMD"
 
 ### 10. STOP
 
-> **Stage 7a complete.** Claude Code is wired to QMD. If you also use Claude Desktop, paste `prompts/stage-7b-wire-claude-desktop.md`. Otherwise paste `prompts/stage-8-brand-the-upgrade.md`.
+> **Stage 7a complete.** Claude Code is wired to QMD. If you also use Claude Desktop, paste `prompts/stage-7b-wire-claude-desktop.md`. Otherwise paste `prompts/stage-8-memory-layer-note.md`.
 
 Do NOT run further commands until the user pastes the next prompt.

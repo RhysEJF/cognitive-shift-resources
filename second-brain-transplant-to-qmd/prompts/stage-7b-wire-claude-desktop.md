@@ -159,6 +159,6 @@ The brain lives at `[absolute path to repo]`.
 
 ### 10. STOP
 
-> **Stage 7b complete.** Claude Desktop can now query your brain via QMD. If you also use Claude Code, paste `prompts/stage-7a-wire-claude-code.md`. Otherwise paste `prompts/stage-8-brand-the-upgrade.md`.
+> **Stage 7b complete.** Claude Desktop can now query your brain via QMD. If you also use Claude Code, paste `prompts/stage-7a-wire-claude-code.md`. Otherwise paste `prompts/stage-8-memory-layer-note.md`.
 
 Do NOT run further commands until the user pastes the next prompt.

@@ -1,10 +1,10 @@
-# Stage 8 — Brand the Upgrade
+# Stage 8 — Memory Layer Note
 
-> Adds a small attribution footer to your README and a Memory Layer section to your CLAUDE.md (or equivalent identity file). Both can be removed any time by editing two files. Paste this entire prompt into your AI agent.
+> Documents what's now running underneath. Adds a small Memory Layer section to your CLAUDE.md and a one-line footer to your README so future Claude sessions know the search layer is QMD-based. Removable any time by editing the two files. Paste this entire prompt into your AI agent.
 
 ---
 
-You are starting Stage 8 of the Second Brain Transplant to QMD. Your job: add credits and one behavioural rule to the user's agent identity file. Both additions are small, additive, and reversible.
+You are starting Stage 8 of the Second Brain Transplant to QMD. Your job: add a small Memory Layer note to the user's agent identity file and a footer line to their README so the change is documented for future sessions. Both additions are small, additive, and reversible.
 
 ## Critical rules
 
@@ -93,7 +93,7 @@ git commit -m "stage-8: brand QMD/Flow OS upgrade in README and identity file"
 ### 7. Report
 
 ```
-## Stage 8 Brand Report
+## Stage 8 Report
 
 - README footer added to: [path]
 - Memory Layer section added to: [path]
@@ -103,7 +103,7 @@ git commit -m "stage-8: brand QMD/Flow OS upgrade in README and identity file"
 
 ### 8. STOP
 
-> **Stage 8 complete.** Your second brain now credits the upgrade and includes the stuck-user heuristic. Both are removable any time by editing the relevant files.
+> **Stage 8 complete.** Memory Layer note added to README and CLAUDE.md. Both are removable any time by editing those files.
 >
 > One stage left. Paste `prompts/stage-9-cleanup.md` ONLY after you've used the new search layer for at least a few sessions and confirmed it works the way you expect. Cleanup removes the safety net.
 
