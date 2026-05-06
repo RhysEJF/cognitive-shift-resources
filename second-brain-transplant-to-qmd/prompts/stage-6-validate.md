@@ -100,7 +100,35 @@ Tell the user:
 > 2. Check `troubleshooting.md` for index-coverage debugging
 > 3. Reach out to Rhys: https://x.com/virtual_rf
 
-### 6. (Optional) Run the article's "before/after" benchmark
+### 6. BM25-only sanity check (catches a silent failure mode)
+
+`qmd query` (hybrid) is what you'll mostly use. But if you ever install a UserPromptSubmit hook that auto-injects memory hits into the agent's context, that hook almost certainly uses `qmd search` (BM25-only) for latency reasons. BM25 has a known failure mode: long natural-language sentences with stop words and trailing imperatives can return zero results outright — not just low-scoring results, but an empty set. The hook then silently injects nothing and the agent appears to "not know" things it has indexed.
+
+Test it now so you know whether your conversational prompts will hit. Pick a query that *sounds like how you'd actually talk to your agent* — full sentence, question mark, maybe a trailing instruction:
+
+```bash
+QUERY="Who in my network is connected to <something you know is in your archive>? Use my notes."
+
+echo "=== qmd search (BM25 only — what an injection hook would use) ==="
+$QMD search "$QUERY" --json -n 5
+
+echo ""
+echo "=== qmd query (hybrid — what you'd run manually) ==="
+$QMD query "$QUERY" --json -n 5
+```
+
+Show the user both outputs. Two failure modes to watch for:
+
+1. **`qmd search` returns `[]`** while `qmd query` returns sensible hits → BM25 is dropping the query entirely. An auto-injection hook will silently fail on similar prompts.
+2. **`qmd search` returns hits but all under score 0.5** → a hook with a default threshold of 0.5 would filter them out.
+
+If either happens, tell the user:
+
+> Heads up: `qmd search` (BM25-only) returns nothing/low-scoring on conversational prompts like the one above. If you install a memory-injection hook that uses BM25, it'll silently fail on similar queries. Workarounds: (a) have the hook strip stop words and punctuation before passing to `qmd search`, (b) lower the score threshold, or (c) accept that the hook only fires on keyword-dense prompts and rely on the agent calling `qmd query` reactively.
+
+This isn't a blocker for proceeding to Stage 7 — `qmd query` works fine and the agent can call it directly. But it's worth knowing before you wire up automation that depends on the BM25 path.
+
+### 7. (Optional) Run the article's "before/after" benchmark
 
 If the user wants to publish their own version of the comparison, this is the moment to capture it:
 
@@ -117,7 +145,7 @@ $QMD query "$QUERY" --json -n 5
 
 Save the output to `experiences/captures/qmd-validation-<date>.md` if the user wants to keep evidence.
 
-### 7. Report
+### 8. Report
 
 ```
 ## Stage 6 Validation Report
@@ -129,7 +157,7 @@ Save the output to `experiences/captures/qmd-validation-<date>.md` if the user w
 - Notes: [anything weird, edge cases, files that didn't surface but should have]
 ```
 
-### 8. STOP
+### 9. STOP
 
 > **Stage 6 validation complete.** [Pass / Fail message]
 >

@@ -140,14 +140,19 @@ done
 
 Generate the patched version per file. Use these replacements:
 
-| Grep pattern | QMD replacement |
-|---|---|
-| `grep -ril "X" memory/` | `./vendor/qmd/bin/qmd query "X" --json -n 10` |
-| `grep -ril "X" memory/ experiences/` | `./vendor/qmd/bin/qmd query "X" --json -n 10` (QMD already searches all registered collections) |
-| `grep -r --include="*.md" "X" memory/` | `./vendor/qmd/bin/qmd query "X" --json -n 10` (QMD only indexes markdown anyway) |
-| `ripgrep "X" memory/` or `rg "X" memory/` | Same as above |
-| Output piped to `head -N` | Use `-n N` flag on qmd query for the same effect |
-| Output filtered by sort/uniq | Drop the filter — qmd already returns ranked unique results |
+| Grep pattern | QMD replacement | Notes |
+|---|---|---|
+| `grep -ril "natural-language question" memory/` | `./vendor/qmd/bin/qmd query "natural-language question" --json -n 10` | Hybrid (~10s). Best recall on conceptual queries. |
+| `grep -ril "exact-keyword" memory/` | `./vendor/qmd/bin/qmd search "exact-keyword" --json -n 10` | BM25 only (~270ms). Use when you know the exact term. Faster than `query` for keyword scans. |
+| `grep -ril "X" memory/ experiences/` | `./vendor/qmd/bin/qmd query "X" --json -n 10` | QMD already searches all registered collections. |
+| `grep -r --include="*.md" "X" memory/` | `./vendor/qmd/bin/qmd query "X" --json -n 10` | QMD only indexes markdown anyway. |
+| `ripgrep "X" memory/` or `rg "X" memory/` | Same as above | Pick `query` or `search` based on whether the input is conceptual or literal. |
+| Output piped to `head -N` | Use `-n N` flag on qmd query for the same effect | |
+| Output filtered by sort/uniq | Drop the filter — qmd already returns ranked unique results | |
+
+**Choosing `query` vs `search`:** if the grep input is a natural-language sentence or a conceptual phrase, use `qmd query`. If it's a specific identifier, person name, exact phrase, or known keyword, use `qmd search` — it's ~30x faster and BM25 handles literal matches better than the LLM expansion in `query`.
+
+**Optional `--explain`:** add `--explain` to either command to surface per-lane retrieval scores (RRF contributions, rerank score, expansion variants). Useful when results look off and you want to know *why*. Costs nothing if you don't read the output.
 
 For each file: show the diff. Ask:
 
@@ -175,7 +180,88 @@ Cite the file path when referencing remembered material.
 
 Show the diff. Ask. Apply.
 
-### 7. (If Flow OS-style) Pull the routing table into learn.md
+### 7. (Optional) Drop in a `/qmd` slash command
+
+Replacing grep with `qmd query` calls covers the existing call sites, but agents tend to fall back to single-line `qmd query "<prompt>"` and miss QMD's typed-query patterns (lex/vec/hyde mixing, intent steering, the 2x first-line fusion weight). A dedicated `/qmd` slash command gives the user a deliberate, well-formed search entry point.
+
+Tell the user:
+
+> Optional: drop in a `/qmd <query>` slash command. It runs QMD with the typed-query patterns from the bundled SKILL.md — usually higher-quality results than ad-hoc `qmd query` calls. Works in terminal and Telegram (any interface that reads `.claude/commands/`). Add it? (Yes / No / Show me what it does)
+
+If yes, write the file at `.claude/commands/qmd.md`:
+
+```markdown
+# /qmd Command
+
+Execute when the user says `/qmd <query>` — runs a deliberate, well-formed QMD search using the author's best-practice patterns from `vendor/qmd/skills/qmd/SKILL.md`.
+
+## Execution Flow
+
+### Phase 1: Plan the query (announce briefly)
+
+| Query shape | Lines to use |
+|---|---|
+| Exact terms / names / code identifiers known | `lex:` only |
+| Natural-language question, vocabulary unclear | single-line auto-expand or `vec:` |
+| Best recall (most general case) | `lex:` + `vec:` |
+| Abstract / complex / cross-domain topic | `lex:` + `vec:` + `hyde:` |
+| Ambiguous single word (e.g. "performance") | add `intent:` line on top |
+
+Rules: first line gets 2x weight in RRF fusion (put strongest guess first). `lex:` 2-5 keywords, `"phrase"` for exact, `-term` to exclude. `vec:` natural-language phrasing. `hyde:` 50-100 words of expected answer text. `intent:` steering clause; doesn't search.
+
+Announce the plan in one line: *"Planning: lex + vec, intent='X' because Y."*
+
+### Phase 2: Run the query
+
+Typed multi-line:
+\`\`\`bash
+./vendor/qmd/bin/qmd query "$(cat <<'EOF'
+intent: <optional steering clause>
+lex: <2-5 keywords>
+vec: <natural language question>
+hyde: <50-100 words of expected answer text>
+EOF
+)" --json --explain -n 5
+\`\`\`
+
+Single-line auto-expand:
+\`\`\`bash
+./vendor/qmd/bin/qmd query "<question>" --json --explain -n 5
+\`\`\`
+
+Exact-string lookup (filenames, UUIDs, quotes):
+\`\`\`bash
+./vendor/qmd/bin/qmd search "<exact string>" --json -n 5
+\`\`\`
+
+### Phase 3: Read deeply
+
+- Parse the `--explain` block to see which lanes (lex/vec/hyde) surfaced each result
+- For each result with `score > 0.7`, read the file in **full** via the Read tool
+- If top result scores `< 0.5`, this is low-confidence — try a different type combo, or tell the user no strong match found
+
+### Phase 4: Synthesise and cite
+
+- **Answer** synthesised from files read
+- **Sources** — file paths cited inline
+- **Optional one-line trace** — what worked (e.g. *"vec lane carried it; BM25 was empty"*)
+
+## When NOT to use /qmd
+
+- Right-now session work (no historical context needed)
+- User explicitly said "ignore memory"
+- Trivial exact-string lookup — use `qmd search` directly
+- The query is itself another slash command
+
+## Reference
+
+- Bundled skill: `vendor/qmd/skills/qmd/SKILL.md`
+- QMD CLI help: `./vendor/qmd/bin/qmd --help`
+```
+
+Show the file. Ask for approval. Apply.
+
+### 8. (If Flow OS-style) Pull the routing table into learn.md
 
 If the user's `.claude/commands/learn.md` exists and references `suggested_path` or "file path conventions" — meaning it's a Flow OS-derived /learn — they need the new Path Routing table for /learn to actually write to the right drawers post-transplant.
 
@@ -185,18 +271,18 @@ Tell the user:
 
 If yes, fetch from `https://raw.githubusercontent.com/RhysEJF/flow-os-v2/main/.claude/commands/learn.md`, extract the "Path routing" subsection of Step 4, and integrate it into the user's learn.md. Show the diff. Apply on approval.
 
-### 8. Smoke-test
+### 9. Smoke-test
 
 Run a real `/plan` or `/learn` (or whatever Claude Code command was modified) end-to-end. Watch it execute. Verify it now calls qmd and returns sensible results. If it fails, restore the relevant `.pre-qmd-backup` file and investigate.
 
-### 9. Commit
+### 10. Commit
 
 ```bash
 git add -A
 git commit -m "stage-7: wire Claude Code commands to QMD"
 ```
 
-### 10. Report
+### 11. Report
 
 ```
 ## Stage 7 Wire Report
@@ -210,7 +296,7 @@ git commit -m "stage-7: wire Claude Code commands to QMD"
 - Smoke test: [passed / failed / skipped]
 ```
 
-### 11. STOP
+### 12. STOP
 
 > **Stage 7 complete.** Claude Code is wired to QMD. Paste `prompts/stage-8-memory-layer-note.md` to continue.
 

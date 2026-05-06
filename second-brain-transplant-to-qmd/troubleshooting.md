@@ -225,6 +225,58 @@ This is the bug Karan hit before Rhys patched it. Symptoms: every memory lands i
 
 Fix: confirm your `.claude/commands/learn.md` has the **Path Routing table** in Step 4 and the **Customer-Specific Routing** subsection. If it doesn't, your /learn is on a pre-fix version. Pull the current one from `https://github.com/RhysEJF/flow-os-v2/blob/main/.claude/commands/learn.md`.
 
+### "My auto-injection hook isn't firing on conversational prompts"
+
+Symptom: you have a UserPromptSubmit hook (Flow OS ships one; you may have written your own) that should auto-inject QMD memory hits into the agent's context. It worked on some prompts but appears dead on natural-language sentences. The agent acts like it doesn't know things you know are indexed.
+
+Likely cause: the hook uses `qmd search` (BM25) under the hood for latency. BM25 has a known failure mode where long natural-language sentences with stop words and trailing imperatives ("…use my notes", "…find me X") return an **empty result set** outright. The hook silently injects nothing and exits cleanly.
+
+Diagnose:
+
+```bash
+# Run the failing prompt manually through BM25
+./vendor/qmd/bin/qmd search "<paste the conversational prompt as-is>" --json -n 5
+```
+
+If you get `[]` back, BM25 is the issue. Confirm by stripping the prompt to keywords:
+
+```bash
+./vendor/qmd/bin/qmd search "<2-4 keyword distillation>" --json -n 5
+```
+
+Same archive, same index — but now you'll typically get hits in the 0.85-0.93 range. The empty result is real.
+
+Fixes (pick one):
+
+1. **Strip stop words and punctuation in the hook** before passing to `qmd search`. Drop question marks, "use my notes", "find me", etc.
+2. **Lower the score threshold** from the hook's default (often 0.5) to ~0.3. Doesn't help when the result set is empty, but does help when results return at low scores.
+3. **Switch the hook to `qmd query`** (hybrid). Slower (~10s vs ~270ms) — you may need to raise the hook timeout in `settings.json` accordingly.
+4. **Accept the limitation** — let the agent call `qmd query` reactively on natural-language questions; only rely on the hook for keyword-dense prompts.
+
+Also check `.flow/events.jsonl` (if you're on Flow OS) for `memory.injected` events — their absence is direct evidence the hook isn't firing as expected.
+
+### "QMD's auto-expansion is generating off-topic variants"
+
+Symptom: you run `qmd query "<phrase>" --explain` and the trace shows expansion lines like `vec: importance of preparing for cognitive shifts in meditation` for a query that's actually about your "Cognitive Shift" *publication*. Or you see a leaked `</think>` tag in the HyDE text. Recall is poor because the LLM expanded into the wrong topic.
+
+Cause: the local expansion model (Qwen3-0.6B) interpreting an ambiguous term in its general training-data sense, not the sense your archive uses. Single-word or two-word queries are most prone to this.
+
+Fixes:
+
+1. **Add an `intent:` line** to a typed query — it doesn't search but steers expansion and reranking:
+
+   ```bash
+   qmd query $'intent: my publication and brand named "The Cognitive Shift", not meditation\nlex: cognitive shift training'
+   ```
+
+2. **Skip auto-expansion entirely** — write a typed-line query yourself with no implicit expansion:
+
+   ```bash
+   qmd query $'lex: cognitive shift training\nvec: my training program for AI workforce builders\nhyde: <50-100 words of expected answer text>'
+   ```
+
+3. **Use `--explain`** routinely on important queries so you spot bad expansions early. The `</think>` leak in particular is worth flagging — it's a sign the local LLM didn't terminate its thinking block cleanly.
+
 ### "The article promised this would take an hour. It's been three."
 
 The first migration is always the slowest. Possible time sinks:
