@@ -24,8 +24,7 @@ Second Brain users running on **Claude Code**. Specifically:
 - A CLAUDE.md tells Claude how to behave
 - Your current search is grep or basic keyword matching
 
-
-If you also use Claude Desktop alongside Claude Code, Stage 7b wires that up too. If you're on a different agent host entirely, Stage 7c provides a generic fallback.
+Includes [Flow OS](https://thecognitiveshift.com/training) and hand-rolled Claude Code setups.
 
 You need:
 
@@ -69,13 +68,9 @@ This is deliberately not a single mega-prompt. Memory data is sensitive. A bad a
 | 4 | [Frontmatter tidy (OPT-IN)](prompts/stage-4-frontmatter.md) | Adds id/type/entities/topics to files that lack them. Skip if you want raw markdown only | Yes (until cutover) |
 | 5 | [Index](prompts/stage-5-index.md) | First QMD index of your archive. Generates embeddings. | Yes (delete `~/.cache/qmd/`) |
 | 6 | [Validate](prompts/stage-6-validate.md) | Runs real queries against your archive. Confirms search quality. | Yes (read-only) |
-| 7a | [Wire Claude Code](prompts/stage-7a-wire-claude-code.md) | Replaces grep calls in your /plan and /learn with qmd query | Yes (restore from backup branch) |
-| 7b | [Wire Claude Desktop](prompts/stage-7b-wire-claude-desktop.md) | Installs QMD as an MCP server in Claude Desktop | Yes (edit `claude_desktop_config.json` back) |
-| 7c | [Wire other agents (fallback)](prompts/stage-7c-wire-custom-gpt.md) | Generic CLI wrapper for non-Claude agents. Skip if you're on Claude Code or Desktop. | Yes (delete the wrapper) |
+| 7 | [Wire Claude Code](prompts/stage-7-wire-claude-code.md) | Scans every grep occurrence across your repo, classifies each, replaces the right ones with qmd query (per-instance approval) | Yes (restore from backup branch) |
 | 8 | [Memory Layer note](prompts/stage-8-memory-layer-note.md) | Adds a small Memory Layer section to your README and CLAUDE.md so future Claude sessions know what's running | Yes |
 | 9 | [Cleanup](prompts/stage-9-cleanup.md) | Removes backup branch and staging files. Only after stable use. | Manual (re-create branch from history) |
-
-You only do ONE of stage 7a / 7b / 7c (or several if you use multiple agents). Pick the one that matches your host.
 
 ---
 

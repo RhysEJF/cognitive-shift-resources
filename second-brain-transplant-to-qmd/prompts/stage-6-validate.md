@@ -133,8 +133,6 @@ Save the output to `experiences/captures/qmd-validation-<date>.md` if the user w
 
 > **Stage 6 validation complete.** [Pass / Fail message]
 >
-> If passed, paste one of: `prompts/stage-7a-wire-claude-code.md`, `prompts/stage-7b-wire-claude-desktop.md`, or `prompts/stage-7c-wire-custom-gpt.md` — pick the one that matches the AI host you use.
->
-> If you use multiple hosts, run each Stage 7 prompt in turn (the wiring is independent per host).
+> If passed, paste `prompts/stage-7-wire-claude-code.md` to wire Claude Code's commands to QMD.
 
 Do NOT run further commands until the user pastes the next prompt.

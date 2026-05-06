@@ -180,19 +180,9 @@ cp .claude/commands/learn.md.pre-qmd-backup .claude/commands/learn.md
 
 Then look at what the original grep was actually doing. Sometimes the right move is to keep grep for that one specific use case (e.g., scanning frontmatter fields) and only swap grep→qmd for the body-search calls.
 
-### "Claude Desktop doesn't see the QMD MCP server"
+### "I want Claude Desktop to also use my QMD index"
 
-Most common cause: `which node` resolves to a version-manager-managed binary that Claude Desktop's launch shell can't find.
-
-Fix: use the absolute path to `node` in `claude_desktop_config.json`. Stage 7b's prompt does this by default. If you hand-edited later, double-check.
-
-After editing the config, you MUST quit Claude Desktop completely (Cmd-Q) and reopen. A window-close isn't enough.
-
-### "Custom GPT can't reach my repo"
-
-OpenAI's Code Interpreter sandbox doesn't have access to your local filesystem. Custom GPTs running through that sandbox can't query QMD on your machine.
-
-For local-first usage, prefer Claude Code or Claude Desktop. If you need a custom GPT to reach QMD, you'd have to host the QMD MCP server publicly (which defeats the local-first design).
+This transplant focuses on Claude Code. If you also want Claude Desktop to query the same brain via QMD's MCP server, see the [QMD repo's MCP docs](https://github.com/tobi/qmd) — the install is straightforward: register the QMD binary as an MCP server in `claude_desktop_config.json`, point it at your index, restart Claude Desktop. Common gotcha: use the absolute path to `node` (Claude Desktop's launch shell often can't find version-manager Node binaries).
 
 ---
 
@@ -242,7 +232,7 @@ The first migration is always the slowest. Possible time sinks:
 - Model downloads (Stage 3): one-time, 5-15 minutes
 - Embedding generation (Stage 5): scales with archive size; 10-60 minutes for typical archives
 - Frontmatter (Stage 4): scales with file count + your reading speed for diffs
-- Wiring (Stage 7): 5-15 minutes per host
+- Wiring (Stage 7): 5-15 minutes
 
 Your second migration on a different machine is much faster — models are cached, you know the rhythm, you skip Stage 4.
 

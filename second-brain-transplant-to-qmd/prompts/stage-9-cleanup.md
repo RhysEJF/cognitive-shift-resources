@@ -62,7 +62,7 @@ Ask per item:
 
 > Delete `.transplant-rollback.md`? Once gone, the rollback recipe is in this stage's git history but not in the working tree. (Yes / No)
 
-> Delete `.claude/commands/*.pre-qmd-backup` files? These were the originals before Stage 7a's grep replacements. (Yes / No)
+> Delete `.claude/commands/*.pre-qmd-backup` files? These were the originals before Stage 7's grep replacements. (Yes / No)
 
 > Delete `claude_desktop_config.json.pre-qmd-backup`? (Yes / No)
 
