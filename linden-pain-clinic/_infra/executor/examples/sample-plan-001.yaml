@@ -1,0 +1,32 @@
+# Sample plan emitted by a clinician's Claude Code session.
+#
+# The session read all three pseudonymised patient notes in team-brain/patients/
+# and decided on these state changes. Note that EVERY patient reference is a
+# token (PERSON_*) — the session never knew the real names.
+
+plan_id: demo-2026-05-11-001
+
+operations:
+  # First patient: looks like they need closer monitoring.
+  - op: set_review_status
+    patient: PERSON_15b02abf2bbe
+    status: needs_followup
+
+  - op: schedule_followup
+    patient: PERSON_15b02abf2bbe
+    weeks_out: 4
+    reason: Chronic intractable migraine; reassess pain management regimen
+
+  # Second patient: stable on current treatment, just record progress.
+  - op: append_note
+    patient: PERSON_5cc90a603403
+    note: Patient stable on current regimen; continue PT and review at 6 weeks.
+
+  # Third patient: multiple recent ED visits suggest escalation needed.
+  - op: set_review_status
+    patient: PERSON_a8e5955e6226
+    status: escalate_to_consultant
+
+  - op: flag_for_review
+    patient: PERSON_a8e5955e6226
+    reason: Repeated ED admissions in past quarter; consider pain-clinic referral

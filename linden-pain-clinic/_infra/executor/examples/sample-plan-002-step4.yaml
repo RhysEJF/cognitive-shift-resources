@@ -1,0 +1,22 @@
+# Step 4 plan: the clinical session's decision after reading
+# team-brain/patients/PERSON_022ae1d2e672.md
+#
+# The session sees: 63yo male, chronic pain + ischemic heart disease,
+# multiple recent ED admissions. It produces a structured plan referencing
+# the patient only by token.
+
+plan_id: demo-2026-05-12-step4
+
+operations:
+  - op: set_review_status
+    patient: PERSON_022ae1d2e672
+    status: needs_followup
+
+  - op: schedule_followup
+    patient: PERSON_022ae1d2e672
+    weeks_out: 2
+    reason: Multiple ED admissions alongside chronic pain and ischemic heart disease; reassess polypharmacy and analgesic load
+
+  - op: append_note
+    patient: PERSON_022ae1d2e672
+    note: Discussed cardiac comorbidity at MDT meeting. Refer for joint pain-clinic and cardiology review. Patient agreeable.

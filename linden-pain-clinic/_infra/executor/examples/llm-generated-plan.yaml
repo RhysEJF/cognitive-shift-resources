@@ -1,0 +1,43 @@
+plan_id: llm-generated-2026-05-12
+
+operations:
+  # PERSON_3370d0709fce — chronic pain patient with ischemic heart disease,
+  # abnormal cardiac imaging, breast malignancy, and hypertension.
+  # Cardiac + oncologic comorbidity stack warrants consultant escalation.
+  - op: set_review_status
+    patient: PERSON_3370d0709fce
+    status: escalate_to_consultant
+  - op: flag_for_review
+    patient: PERSON_3370d0709fce
+    reason: Chronic pain in context of ischemic heart disease with abnormal cardiac imaging and active breast malignancy — requires cardiology and oncology coordination before any analgesic escalation.
+  - op: append_note
+    patient: PERSON_3370d0709fce
+    note: Patient PERSON_3370d0709fce carries a high-risk comorbidity profile (IHD with abnormal coronary imaging, malignant neoplasm of breast, essential hypertension) alongside chronic pain. Recommend MDT review with cardiology and oncology input before any opioid or NSAID adjustment. Confirm current oncology surveillance is in date.
+
+  # PERSON_6ba7c6002bf3 — chronic low back pain with progressive CKD (stages 1→2→3),
+  # diabetic nephropathy, hypertension, obesity, and two urgent care visits.
+  # Renal trajectory + recent unscheduled care = escalation signal.
+  - op: set_review_status
+    patient: PERSON_6ba7c6002bf3
+    status: needs_followup
+  - op: schedule_followup
+    patient: PERSON_6ba7c6002bf3
+    weeks_out: 2
+    reason: Progressive CKD (stages 1 through 3 documented) with diabetic nephropathy and two recent urgent care encounters — needs near-term renal-safe analgesia review.
+  - op: append_note
+    patient: PERSON_6ba7c6002bf3
+    note: PERSON_6ba7c6002bf3 shows progression across CKD stages with underlying diabetic kidney disease, hypertension, and obesity. Two urgent care encounters in close succession suggest inadequate symptom control. Review analgesic regimen for renal safety (avoid NSAIDs, dose-adjust gabapentinoids), confirm nephrology linkage, and verify HbA1c and eGFR trend.
+
+  # PERSON_f3f6c450e360 — chronic neck pain with seizure disorder, traumatic brain
+  # injury history, and a recent ER admission as the most recent encounter.
+  # Recent ED visit + neurological comorbidity = needs prompt review.
+  - op: set_review_status
+    patient: PERSON_f3f6c450e360
+    status: needs_review
+  - op: flag_for_review
+    patient: PERSON_f3f6c450e360
+    reason: Most recent encounter was an emergency room admission; underlying seizure disorder and prior traumatic brain injury raise concern for analgesic interactions and seizure-threshold-lowering agents.
+  - op: schedule_followup
+    patient: PERSON_f3f6c450e360
+    weeks_out: 1
+    reason: Post-ED review within one week to clarify reason for emergency presentation, reconcile medications against seizure threshold risk, and confirm neurology follow-up.

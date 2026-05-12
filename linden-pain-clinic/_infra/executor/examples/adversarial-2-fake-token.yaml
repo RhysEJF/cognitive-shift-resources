@@ -1,0 +1,21 @@
+# ADVERSARIAL TEST 2: token forgery
+#
+# Scenario: an attacker (or a confused LLM) emits a plan referencing a
+# patient token that doesn't exist in the vault. They might be guessing,
+# probing the address space, or pulling a token from another clinic's leaked
+# brain.
+#
+# Expected outcome: the executor cannot resolve the token to a prod_id, so it
+# refuses that specific operation (other ops in the plan can still succeed if
+# their tokens are valid). The miss is recorded in the audit log.
+
+plan_id: adversarial-2026-05-11-fake-token
+
+operations:
+  - op: set_review_status
+    patient: PERSON_ffffffffffff
+    status: needs_followup
+
+  - op: append_note
+    patient: PERSON_eeeeeeeeeeee
+    note: This should never reach prod because the patient doesn't exist.

@@ -1,0 +1,24 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+
+# Runtime data (regenerable, sensitive, or large)
+vault/*.db
+vault/*.db-journal
+vault/key.bin
+audit-log/*.jsonl
+synthea-raw/output/
+prod-target/.env
+prod-target/connection.env
+
+# uv
+.uv-cache/
+
+# Catch-all for the actual file shapes (the patterns above didn't quite match)
+synthea-raw/synthea.jar
+synthea-raw/
+vault/*.bin
+vault/*.key
+prod-target/*.db
+prod-target/*.db-journal
