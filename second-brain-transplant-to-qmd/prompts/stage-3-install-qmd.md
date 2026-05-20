@@ -9,7 +9,7 @@ You are starting Stage 3 of the Second Brain Transplant to QMD. Your job: instal
 ## Critical rules
 
 - Confirm Node 22+ before doing anything else. QMD requires it.
-- Vendor QMD into `vendor/qmd/` inside the user's repo (not globally). This keeps the version pinned to whatever the user has, and makes the install portable.
+- Vendor QMD into `vendor/qmd/` inside the user's repo (not globally) and pin to a tested release tag (currently `v2.5.1`). This makes the install portable and prevents accidental landings on broken intermediate versions.
 - The first run downloads ~2 GB of GGUF models. Do NOT abort partway. Tell the user this is normal.
 - After install is verified, STOP. Do not continue to Stage 4.
 
@@ -25,27 +25,33 @@ If Node is missing or below v22, STOP and tell the user:
 
 > QMD requires Node 22 or later. You have [version]. Install Node 22+ from https://nodejs.org or via a version manager like nvm/fnm/volta, then come back to this stage.
 
-### 2. Vendor the QMD source
+### 2. Vendor the QMD source (pinned to a tested release)
+
+We pin QMD to a specific release rather than tracking `main`. Pre-v2.1.0 builds silently return zero hits on hyphenated queries (`first-principles`, `go-to-market`, `state-of-the-art`, etc.) — a bug in the FTS5 query sanitizer that was fixed upstream on 2026-04-05. Pinning prevents new installs from accidentally landing on an older snapshot or on an unstable `main`.
+
+**Tested release: `v2.5.1`** (released 2026-05-20). Bump this tag deliberately after testing newer QMD releases against your own corpus.
 
 ```bash
 mkdir -p vendor
-cd vendor
-git clone https://github.com/tobi/qmd.git
-cd qmd
+git clone --branch v2.5.1 --depth 1 https://github.com/tobi/qmd.git vendor/qmd
+cd vendor/qmd
 git log -1 --format='%h %ai %s'
 cd ../..
 ```
 
-If `vendor/qmd/` already exists:
+If `vendor/qmd/` already exists (e.g. an earlier install on this machine), refresh it to the pinned tag:
 
 ```bash
+rm -rf vendor/qmd
+git clone --branch v2.5.1 --depth 1 https://github.com/tobi/qmd.git vendor/qmd
 cd vendor/qmd
-git pull origin main
 git log -1 --format='%h %ai %s'
 cd ../..
 ```
 
-Confirm the directory exists and the latest commit is recent. Report the commit hash.
+Re-cloning is safe — `vendor/qmd/` holds only the binary source. Your actual index lives at `~/.cache/qmd/index.sqlite` and is not touched.
+
+Confirm the directory exists and that `cat vendor/qmd/package.json | grep version` reports `"version": "2.5.1"`. Report the version and commit hash.
 
 ### 3. Build QMD
 
@@ -139,7 +145,7 @@ Ask the user which they prefer. Default to Option A unless they say otherwise.
 ```
 ## Stage 3 Install Report
 
-- QMD version: [commit hash]
+- QMD version: v2.5.1 ([commit hash])
 - Build: succeeded
 - Binary: vendor/qmd/bin/qmd (executable: yes)
 - Models downloaded: [list with sizes]

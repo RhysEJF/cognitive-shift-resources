@@ -87,6 +87,28 @@ If the file is growing, it's working. If it's been zero bytes for >5 minutes, th
 
 Models download lazily on first query, not on build. The first query may take 10+ minutes while it pulls 2 GB. Subsequent queries are fast.
 
+### "Hyphenated queries (e.g. `first-principles`, `go-to-market`) return zero hits"
+
+You're on a pre-v2.1.0 build of QMD. Older releases had a bug in the FTS5 query sanitizer that stripped hyphens and concatenated the surrounding letters (`first-principles` → `firstprinciples`), which never matched the indexed tokens (`first`, `principles`). Vector search and `qmd query` (which reranks) hid the bug; `qmd search` and any hook-based memory injection using BM25 silently returned nothing for any hyphenated phrase.
+
+Fixed upstream on 2026-04-05 (v2.1.0+). If you installed before then via an unpinned `git clone`, you have the broken version.
+
+Check your version:
+
+```bash
+cat vendor/qmd/package.json | grep version
+```
+
+If it shows `"version": "2.0.x"` or earlier, refresh to the pinned release:
+
+```bash
+rm -rf vendor/qmd
+git clone --branch v2.5.1 --depth 1 https://github.com/tobi/qmd.git vendor/qmd
+cd vendor/qmd && npm install && npm run build && cd ../..
+```
+
+Your index does **not** need to be rebuilt — the bug was purely in the query path, not the indexing path. Re-run the failed query immediately and it should work.
+
 ---
 
 ## Stage 4 (Frontmatter) issues
