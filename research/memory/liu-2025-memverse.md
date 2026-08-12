@@ -368,15 +368,15 @@ The interesting move in MemVerse is not the four memory types (Hindsight has fou
 
 **Steps:**
 
-1. **Add a `kind: knowledge-graph-node` and `kind: knowledge-graph-edge` to v2 frontmatter, with provenance back-pointers.** Each node (entity slug, e.g. `tom-parker`) and edge file stores the list of source chunk IDs (markdown file path + line range) that support it. Pseudocode:
+1. **Add a `kind: knowledge-graph-node` and `kind: knowledge-graph-edge` to v2 frontmatter, with provenance back-pointers.** Each node (entity slug, e.g. `marcus-webb`) and edge file stores the list of source chunk IDs (markdown file path + line range) that support it. Pseudocode:
 
    ```yaml
    ---
    kind: knowledge-graph-node
-   entity: tom-parker
+   entity: marcus-webb
    subgraph: core            # core | episodic | semantic
    supporting_chunks:
-     - file: memory/contacts/tom-parker.md
+     - file: memory/contacts/marcus-webb.md
        lines: 1-30
      - file: experiences/captures/2026-04-17-session.md
        lines: 45-67

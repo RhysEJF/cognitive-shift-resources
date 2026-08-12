@@ -297,7 +297,7 @@ The agentic-memory papers in the wiki so far (Hindsight, MIRIX, MemVerse, Memory
    helpful_count: 3
    harmful_count: 0
    source_sessions:
-     - 2026-04-23-flow-pitch-tom
+     - 2026-04-23-flow-pitch-example
      - 2026-05-10-research-cycle
    embedding_hash: "sha256-..."   # cached for de-dup
    created_at: "2026-05-19"
