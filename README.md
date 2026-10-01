@@ -36,7 +36,7 @@ Digested papers and reference lists in `research/`, one folder per corpus.
 
 - [`research/memory/`](research/memory/INDEX.md): 145 digested papers on memory and context-layer architectures for AI agents.
 - [`research/synthetic-personas/`](research/synthetic-personas/INDEX.md): digested papers on LLM-simulated personas and synthetic market research.
-- [`research/evals/`](research/evals/README.md): fifty real-world AI evals across ten industries, each with the question it was built to answer, how it measures it, and a link. Markdown plus CSV.
+- [`research/evals/`](research/evals/README.md): fifty real-world AI evals across ten industries, each with the question it was built to answer, how it measures it, and a link (markdown plus CSV), plus a structured digest of every one.
 
 ## How to Use These Skills
 
